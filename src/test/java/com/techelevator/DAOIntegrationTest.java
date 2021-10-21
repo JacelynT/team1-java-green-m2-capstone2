@@ -6,7 +6,9 @@ import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 public abstract class DAOIntegrationTest {
@@ -17,6 +19,7 @@ public abstract class DAOIntegrationTest {
 	 * transaction
 	 */
 	private static SingleConnectionDataSource dataSource;
+	private static JdbcTemplate jdbcTemplate;
 
 	/*
 	 * Before any tests are run, this method initializes the datasource for testing.
@@ -32,6 +35,12 @@ public abstract class DAOIntegrationTest {
 		 * DataSource. This allows us to rollback any changes after each test
 		 */
 		dataSource.setAutoCommit(false);
+	}
+
+
+	@Before
+	public void setupJdbcTemplate() {
+		jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
 	/*

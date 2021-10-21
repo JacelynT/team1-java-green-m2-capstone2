@@ -12,15 +12,23 @@ public class ExcelsiorCLI {
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 
-		ExcelsiorCLI application = new ExcelsiorCLI(dataSource);
-		application.run();
+		Menu menu = new Menu(dataSource);
+		menu.runMainMenu();
+
+//		ExcelsiorCLI application = new ExcelsiorCLI();
+//		application.run();
 	}
 
-	public ExcelsiorCLI(DataSource datasource) {
-		// create your DAOs here
-	}
+//	public ExcelsiorCLI(DataSource datasource) {
+//		// create your DAOs here
+//
+//	}
 
-	public void run() {
-
-	}
+//	public void run() {
+//
+//		//TODO call menu()
+//		Menu menu = new Menu(datasource);
+//		//menu.
+//
+//	}
 }
