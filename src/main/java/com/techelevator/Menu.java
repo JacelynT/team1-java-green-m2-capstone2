@@ -54,26 +54,24 @@ public class Menu {
 
         }
 
-
     }
-
 
     public void VenueMenu() {
         while (true) {
             System.out.println("Which venue would you like to view?");
-            //call display venues
+            venueDAO.retrieveAllVenues();
             this.displayVenues();
+            System.out.println("R) Return to Previous Screen");
 
+            //UserInput
             int result = -1;
             try {
                 result = userInput.verifyUserInput("R");
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number or R");
             }
-
-            if (result > 0) {
-                //call displayVenueSpaces
-
+            if (result > 0 && result <= venueDAO.retrieveAllVenues().size()) {
+                this.displayVenueSpaces();
             }
             else if (result == 0) {
                 break;
@@ -86,14 +84,17 @@ public class Menu {
 
     }
 
-
     public void displayVenues() {
-        //call retrieve all venues
-        venueDAO.retrieveAllVenues();
-
-        //for/each loop sout
+        int count = 1;
+        for (Venue venue : venueDAO.retrieveAllVenues()) {
+            System.out.println(count + ") " + venue.getName());
+            count++;
+        }
     }
 
+    public void displayVenueSpaces() {
+
+    }
 
 
 

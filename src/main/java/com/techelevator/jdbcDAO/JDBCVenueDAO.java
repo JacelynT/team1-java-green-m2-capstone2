@@ -23,14 +23,29 @@ public class JDBCVenueDAO implements VenueDAO {
 
         List<Venue> venueList = new ArrayList<>();
 
-        String sql = "";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, "");
+        SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT * FROM venue");
+
+        while (results.next()) {
+            venueList.add(this.retrieveVenueDetails(results.getLong("id")));
+        }
 
         return venueList;
     }
 
-
     public Venue retrieveVenueDetails(Long id) {
+        List<String> categories = new ArrayList<>();
+
+        SqlRowSet resultCategory = jdbcTemplate.queryForRowSet("SELECT category.name FROM category JOIN category_venue ON category.id = category_venue.category_id WHERE venue_id = ?",id);
+        while (resultCategory.next()) {
+            categories.add(resultCategory.getString("name"));
+        }
+        SqlRowSet resultVenue = jdbcTemplate.queryForRowSet("SELECT * FROM venue WHERE id = ?", id);
+
+        if (resultVenue.next()) {
+            return new Venue(id,resultVenue.getString("name"),resultVenue.getLong("city_id"),resultVenue.getString("description"),categories);
+        }
+
         return null;
     }
+
 }

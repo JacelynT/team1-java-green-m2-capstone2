@@ -6,11 +6,11 @@ public class Venue {
 
     private Long id;
     private String name;
-    private int cityId;
+    private Long cityId;
     private String description;
     private List<String> category;
 
-    public Venue (Long id, String name, int cityId, String description, List<String> category) {
+    public Venue (Long id, String name, Long cityId, String description, List<String> category) {
         this.id = id;
         this.name = name;
         this.cityId = cityId;
@@ -26,7 +26,7 @@ public class Venue {
         return name;
     }
 
-    public int getCityId() {
+    public Long getCityId() {
         return cityId;
     }
 
