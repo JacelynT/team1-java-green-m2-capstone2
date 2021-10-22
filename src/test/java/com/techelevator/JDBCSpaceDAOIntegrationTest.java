@@ -75,8 +75,8 @@ public class JDBCSpaceDAOIntegrationTest extends DAOIntegrationTest {
         List<Space> spaceList = new ArrayList<>();
         BigDecimal dailyRate = new BigDecimal(8.75);
         LocalDate reservationDate = LocalDate.of(2020, 6, 15);
-        LocalDate space4ReservationStart = LocalDate.of(2020, 9, 15);
-        LocalDate space4ReservationEnd = LocalDate.of(2020, 10, 15);
+        LocalDate space4ReservationStart = LocalDate.of(2020, 6, 12);
+        LocalDate space4ReservationEnd = LocalDate.of(2020, 6, 17);
 
         Space space1 = this.createTestSpace("Test Space1", true, 3, 7 ,dailyRate, 200);
         Space space2 = this.createTestSpace("Test Space2", false, 7, 9, dailyRate, 100);
@@ -85,7 +85,6 @@ public class JDBCSpaceDAOIntegrationTest extends DAOIntegrationTest {
 
         jdbcTemplate.update("INSERT INTO reservation (space_id, number_of_attendees, start_date, end_date, reserved_for) VALUES (?,?,?,?,?)",
                 space4.getId(), 50, space4ReservationStart, space4ReservationEnd, "DummyGuest");
-
 
         spaceList = dao.retrieveValidSpaces(dummyVenue.getId(), reservationDate, 5, 20);
 
@@ -107,9 +106,43 @@ public class JDBCSpaceDAOIntegrationTest extends DAOIntegrationTest {
 
     }
 
-    private Space createTestSpace(String name, boolean isAccessible, int openFrom, int openTo, BigDecimal dailyRate, int maxOccupancy) {
-        Long id = (long) 0;
+    @Test
+    public void test_retrieve_space_details_dates_null() {
+        BigDecimal dailyRate = new BigDecimal(4.25);
+        Long id = (long)0;
 
+        jdbcTemplate.update("INSERT INTO space (venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy) VALUES (?,?,?,?,?,?,?)",
+                dummyVenue.getId(), "DummySpaceNullDates", true, null, null, dailyRate, 40);
+        SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT * FROM space WHERE name = ?", "DummySpaceNullDates");
+        if (results.next()) {
+            id = results.getLong("id");
+        }
+
+        Space resultSpace = dao.retrieveSpaceDetails(id);
+
+        SqlRowSet spaceInDatabase = jdbcTemplate.queryForRowSet("SELECT * FROM space WHERE id = ?", id);
+        if (spaceInDatabase.next()) {
+            Long dbSpaceId = spaceInDatabase.getLong("id");
+            Long resultSpaceId = resultSpace.getId();
+            Assert.assertEquals(dbSpaceId,resultSpaceId);
+            Long dbSpaceVenueId = spaceInDatabase.getLong("venue_id");
+            Long resultSpaceVenueId = resultSpace.getVenueId();
+            Assert.assertEquals(dbSpaceVenueId,resultSpaceVenueId);
+            Assert.assertEquals(spaceInDatabase.getString("name"),resultSpace.getName());
+            Assert.assertEquals(spaceInDatabase.getBoolean("is_accessible"),resultSpace.isAccessible());
+
+            Assert.assertEquals(0,resultSpace.getOpenFrom());
+            Assert.assertEquals(0,resultSpace.getOpenTo());
+
+            BigDecimal dbSpaceRate = spaceInDatabase.getBigDecimal("daily_rate");
+            BigDecimal resultSpaceRate = resultSpace.getDailyRate();
+            Assert.assertEquals(dbSpaceRate,resultSpaceRate);
+            Assert.assertEquals(spaceInDatabase.getInt("max_occupancy"),resultSpace.getMaxOccupancy());
+        }
+
+    }
+
+    private Space createTestSpace(String name, boolean isAccessible, int openFrom, int openTo, BigDecimal dailyRate, int maxOccupancy) {
         jdbcTemplate.update("INSERT INTO space (venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy) VALUES (?,?,?,?,?,?,?)",
                 dummyVenue.getId(), name, isAccessible, openFrom, openTo, dailyRate, maxOccupancy);
 

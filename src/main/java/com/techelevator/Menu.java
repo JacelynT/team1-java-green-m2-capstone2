@@ -71,7 +71,7 @@ public class Menu {
                 System.out.println("Please enter a number or R");
             }
             if (result > 0 && result <= venueDAO.retrieveAllVenues().size()) {
-                this.displayVenueSpaces();
+                this.displayVenueSpaces(venueDAO.retrieveAllVenues().get(result).getId());
             }
             else if (result == 0) {
                 break;
@@ -92,8 +92,17 @@ public class Menu {
         }
     }
 
-    public void displayVenueSpaces() {
+    public void displayVenueSpaces(Long venueId) {
+        int count = 1;
+        System.out.println(venueDAO.retrieveVenueDetails(venueId).getName());
+        System.out.print("\n");
+        System.out.println("Header");
 
+        for (Space space : spaceDAO.retrieveSpacesFromVenues(venueId)) {
+//            if (space.getOpenTo() == 0 && )
+            System.out.println("#" + count + " " + space.getName() + " " + space.getOpenFrom() + " " );
+            count++;
+        }
     }
 
 

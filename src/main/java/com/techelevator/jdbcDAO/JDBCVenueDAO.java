@@ -23,7 +23,7 @@ public class JDBCVenueDAO implements VenueDAO {
 
         List<Venue> venueList = new ArrayList<>();
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT * FROM venue");
+        SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT * FROM venue ORDER BY name");
 
         while (results.next()) {
             venueList.add(this.retrieveVenueDetails(results.getLong("id")));
