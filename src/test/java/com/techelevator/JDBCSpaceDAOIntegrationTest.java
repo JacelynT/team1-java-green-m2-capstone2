@@ -64,12 +64,6 @@ public class JDBCSpaceDAOIntegrationTest extends DAOIntegrationTest {
     }
 
 
-    //  ******
-    //TODO -- null open and close months are valid
-    //     -- why is test working when it shouldn't for get details?
-    //     -- need to retrieve next serial in tests?
-
-
     @Test
     public void test_retrieve_valid_spaces() {
         List<Space> spaceList = new ArrayList<>();
@@ -120,7 +114,7 @@ public class JDBCSpaceDAOIntegrationTest extends DAOIntegrationTest {
 
         Space resultSpace = dao.retrieveSpaceDetails(id);
 
-        SqlRowSet spaceInDatabase = jdbcTemplate.queryForRowSet("SELECT * FROM space WHERE id = ?", id);
+        SqlRowSet spaceInDatabase = jdbcTemplate.queryForRowSet("SELECT id, venue_id, name, is_accessible, open_from, open_to, daily_rate::decimal(9,2), max_occupancy FROM space WHERE id = ? AND open_from IS NULL", id);
         if (spaceInDatabase.next()) {
             Long dbSpaceId = spaceInDatabase.getLong("id");
             Long resultSpaceId = resultSpace.getId();
