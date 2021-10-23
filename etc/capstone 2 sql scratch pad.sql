@@ -20,15 +20,16 @@ VALUES ((SELECT id FROM venue WHERE name = 'Dummy Venue'),'Test Space4',false,4,
 INSERT INTO reservation (space_id, number_of_attendees, start_date, end_date, reserved_for) 
 VALUES ((SELECT id FROM space WHERE name = 'Test Space4'),50,'2020-06-12','2020-06-17','Dummy Guest');
 
-SELECT * 
+SELECT DISTCINT  
 FROM space 
 LEFT JOIN reservation ON reservation.space_id = space.id
-WHERE space.venue_id = (SELECT id FROM venue WHERE name = 'Dummy Venue')
-AND space.open_from <= 6
-AND space.open_to >= 6
-AND space.max_occupancy >= 20
-AND (('2020-06-15' < reservation.start_date OR reservation.start_date IS NULL) AND ('2020-06-15' > reservation.end_date OR reservation.end_date IS NULL))
-AND (('2020-06-20' > reservation.start_date OR reservation.start_date IS NULL) AND ('2020-06-20' < reservation.end_date OR reservation.end_date IS NULL));
+WHERE space.venue_id = 2
+AND ((space.open_from <= 1) OR (space.open_from IS NULL))
+AND ((space.open_to >= 1) OR (space.open_to IS NULL))
+AND space.max_occupancy >= 5
+AND ((('2020-01-01'::DATE < reservation.start_date OR reservation.start_date IS NULL) AND ('2020-01-06'::DATE < reservation.start_date OR reservation.start_date IS NULL))
+OR (('2020-01-01'::DATE > reservation.end_date OR reservation.end_date IS NULL) AND ('2020-01-06'::DATE > reservation.end_date OR reservation.end_date IS NULL)))
+;
 
 --AND '2020-06-15' NOT BETWEEN reservation.start_date AND reservation.end_date
 --AND '2020-06-20' NOT BETWEEN reservation.start_date AND reservation.end_date;
@@ -37,4 +38,10 @@ ROLLBACK;
 
 -----------------
 
+SELECT daily_rate::decimal(9,2)
+FROM space;
+
+SELECT *
+FROM space
+WHERE venue_id = 2
 
