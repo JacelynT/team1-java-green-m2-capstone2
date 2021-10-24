@@ -44,7 +44,7 @@ public class JDBCSpaceDAO implements SpaceDAO {
         List<Space> spaceList = new ArrayList<>();
         DateTimeFormatter formatFullDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter formatDateToMonth = DateTimeFormatter.ofPattern("MM");
-        LocalDate endDateNeeded = dateNeeded.plusDays(numberOfDays);
+        LocalDate endDateNeeded = dateNeeded.plusDays(numberOfDays - 1);
 
 
 
@@ -112,16 +112,6 @@ public class JDBCSpaceDAO implements SpaceDAO {
 
         return null;
 
-    }
-
-    public String openDateIntToString(int monthDate) {
-        String[] month = new String[] {"Jan.","Feb.","Mar.","Apr.","May","Jun.","Jul.","Aug.","Sep.","Oct.","Nov.","Dec."};
-        if (monthDate > 0 && monthDate < 13) {
-            return month[monthDate - 1];
-        }
-        else {
-            return "";
-        }
     }
 
 }
