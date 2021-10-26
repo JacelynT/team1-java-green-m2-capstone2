@@ -53,10 +53,10 @@ public class Menu {
             }
 
             if (result == 1) {
-                this.VenueMenu();
+                this.venueMenu();       // method venueMenu()
             }
             else if (result == 0) {
-                break;
+                break;                  // exit program
             }
             else {
                 System.out.println("Invalid input");
@@ -66,12 +66,12 @@ public class Menu {
 
     } //end runMainMenu()
 
-    public void VenueMenu() {
+    public void venueMenu() {
         while (true) {
             System.out.print("\n");
             System.out.println("Which venue would you like to view?");
             venueDAO.retrieveAllVenues();
-            this.displayVenues();
+            this.displayVenues();                           // method displayVenues()
             System.out.println("R) Return to Previous Screen");
 
             //UserInput
@@ -81,14 +81,14 @@ public class Menu {
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number or R");
             }
-            if (result > 0 && result <= venueDAO.retrieveAllVenues().size()) {
-                Venue venue = venueDAO.retrieveAllVenues().get(result-1);
+            if (result > 0 && result <= venueDAO.retrieveAllVenues().size()) {          // method venueDAO.retrieveAllVenues() for list size
+                Venue venue = venueDAO.retrieveAllVenues().get(result - 1);             // method venueDAO.retrieveAllVenues() for selected list value
                 Long venueId = venue.getId();
-                this.displayVenueSpaces(venueId);
-                this.displaySpacesMenu(venueId);
+                this.displayVenueSpaces(venueId);                                       // method displayVenueSpaces()
+                this.displaySpacesMenu(venueId);                                        // method displaySpacesMenu()
             }
             else if (result == 0) {
-                break;
+                break;                                                                  //break back to runMainMenu
             }
             else {
                 System.out.println("Invalid input.");
@@ -101,7 +101,7 @@ public class Menu {
     public void displayVenues() {
         System.out.print("\n");
         int count = 1;
-        for (Venue venue : venueDAO.retrieveAllVenues()) {
+        for (Venue venue : venueDAO.retrieveAllVenues()) {          // method venueDAO.retrieveAllVenues()
             System.out.println(count + ") " + venue.getName());
             count++;
         }
@@ -120,7 +120,7 @@ public class Menu {
 
         //display header
         System.out.print("\n");
-        System.out.println(venueDAO.retrieveVenueDetails(venueId).getName());
+        System.out.println(venueDAO.retrieveVenueDetails(venueId).getName());           // method retrieveVenueDetails for venue name
         System.out.print("\n");
         System.out.println(
                 String.format(numberCol,"")
@@ -132,12 +132,12 @@ public class Menu {
         );
 
         //for each loop to display table
-        for (Space space : spaceDAO.retrieveSpacesFromVenues(venueId)) {
+        for (Space space : spaceDAO.retrieveSpacesFromVenues(venueId)) {                    //for each loop goes through List returned from method retrieveSpacesFromVenues()
             String countString = "#" + count;
             System.out.println(String.format(numberCol,countString)
                             + " " + String.format(nameCol,space.getName())
-                            + " " + String.format(openCol,this.openDateIntToString(space.getOpenFrom()))
-                            + " " + String.format(closeCol,this.openDateIntToString(space.getOpenTo()))
+                            + " " + String.format(openCol,this.openDateIntToString(space.getOpenFrom()))            // method openDateIntToString to turn string to abbreviation
+                            + " " + String.format(closeCol,this.openDateIntToString(space.getOpenTo()))             // method openDateIntToString to turn string to abbreviation
                             + " " + String.format(rateCol,NumberFormat.getCurrencyInstance(Locale.US).format(space.getDailyRate()))
                             + " " + String.format(maxOcCol,space.getMaxOccupancy())
             );
@@ -170,10 +170,10 @@ public class Menu {
             }
 
             if (result == 1) {
-                this.displayReservationMenu(venueId);
-                break;
+                this.displayReservationMenu(venueId);                       // method displayReservationMenu()
+                break;                                                      // break back to venueMenu
             } else if (result == 0) {
-                break;
+                break;                                                      // break back to venueMenu
             } else {
                 System.out.println("Invalid input");
             }
@@ -208,10 +208,10 @@ public class Menu {
             }
         }
 
-        List<Space> validSpaces = spaceDAO.retrieveValidSpaces(venueId, date, days, attendance);
+        List<Space> validSpaces = spaceDAO.retrieveValidSpaces(venueId, date, days, attendance);                // method retrieveValidSpaces()
         if (validSpaces.size() > 0) {
-            this.displayValidSpaces(validSpaces, days);
-            this.makeReservation(validSpaces, venueId, date, days, attendance);
+            this.displayValidSpaces(validSpaces, days);                                                         // method displayValidSpaces()
+            this.makeReservation(validSpaces, venueId, date, days, attendance);                                 // method makeReservation()
         }
         else {
             System.out.println("No spaces meet the criteria.");
@@ -288,16 +288,16 @@ public class Menu {
                     System.out.print("\n");
                     System.out.println("Who is this reservation for? ");
                     String reservationName = userInput.convertUserString();
-                    Reservation reservation = reservationDAO.addReservation((long)result, date, numberOfDays, attendance, reservationName);
-                    this.reservationPrintOut(reservation);
-                    break;
+                    Reservation reservation = reservationDAO.addReservation((long)result, date, numberOfDays, attendance, reservationName);             // method reservationDAO.addReservation
+                    this.reservationPrintOut(reservation);                                                                                              // method reservationPrintOut
+                    break;                                                                                                                              // break back to displayReservationMenu
                 }
                 else {
                     System.out.println("Invalid input. Please choose a Space # from the list.");
                 }
                 }
             else if (result == 0) {
-                break;
+                break;                                               // break back to displayReservationMenu
             }
             else {
                 System.out.println("Invalid input.");
